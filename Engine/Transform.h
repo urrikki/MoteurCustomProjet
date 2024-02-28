@@ -22,6 +22,10 @@ struct TRANSFORM
 	//XMMATRIX proj;
 
 	void Identity();
-	void Rotate(float roll, float pitch, float yaw);
+	void Rotate(float roll, float yaw ,float pitch);
+	void Scaling(float x , float y , float z);
+	void Translation(float x, float y, float z);
+	void UpdateWorld();
+
 };
 

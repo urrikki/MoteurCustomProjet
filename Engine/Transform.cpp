@@ -59,7 +59,7 @@ void TRANSFORM::Identity()
     
 }
 
-void TRANSFORM::Rotate(float roll, float pitch, float yaw)
+void TRANSFORM::Rotate(float roll, float yaw ,float pitch )
 {   
     // Créer un quaternion pour chaque rotation (delta)
     XMVECTOR quatRot;
@@ -80,7 +80,7 @@ void TRANSFORM::Rotate(float roll, float pitch, float yaw)
     XMStoreFloat4(&qRot, XMQuaternionMultiply(XMLoadFloat4(&qRot), quatRot));
 
     // Convertir le quaternion en une matrice de rotation (magique)
-    XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4 (&qRot));
+    XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4(&qRot));
 
     //Passer la matrix en XMFLOAT4X4
     XMStoreFloat4x4(&mRot, matRot);
@@ -97,3 +97,53 @@ void TRANSFORM::Rotate(float roll, float pitch, float yaw)
     vDir.z = mRot._33;   
 }
 
+void TRANSFORM::Rotate(float roll, float pitch, float yaw)
+{
+    // Créer un quaternion pour chaque rotation (delta)
+    XMVECTOR quatRot;
+
+    XMFLOAT3 axisDir = vDir;
+    XMVECTOR quatDir = XMQuaternionRotationAxis(XMLoadFloat3(&axisDir), roll);
+    quatRot = quatDir;
+
+    XMFLOAT3 axisRight = vRight;
+    XMVECTOR quatRight = XMQuaternionRotationAxis(XMLoadFloat3(&axisRight), pitch);
+    quatRot = XMQuaternionMultiply(quatRot, quatRight);
+
+    XMFLOAT3 axisUp = vUp;
+    XMVECTOR quatUp = XMQuaternionRotationAxis(XMLoadFloat3(&axisUp), yaw);
+    quatRot = XMQuaternionMultiply(quatRot, quatUp);
+
+    // Ajouter la rotation delta à la rotation actuelle de l'objet
+    XMStoreFloat4(&qRot, XMQuaternionMultiply(XMLoadFloat4(&qRot), quatRot));
+
+    // Convertir le quaternion en une matrice de rotation (magique)
+    XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4(&qRot));
+
+    //Passer la matrix en XMFLOAT4X4
+    XMStoreFloat4x4(&mRot, matRot);
+}
+
+void TRANSFORM::Scaling(float x, float y, float z)
+{
+    vSca.x = x;
+    vSca.y = y;
+    vSca.z = z;
+    XMMATRIX scaMat = XMMatrixScaling(x, y, z);
+    XMStoreFloat4x4(&mSca, scaMat);
+}
+
+void TRANSFORM::Translation(float x, float y, float z)
+{
+    vPos.x = x;
+    vPos.y = y;
+    vPos.z = z;
+    XMMATRIX traMat = XMMatrixTranslation(x, y, z);
+    XMStoreFloat4x4(&mPos, traMat);
+}
+
+void TRANSFORM::UpdateWorld()
+{
+    XMMATRIX worldMat = XMLoadFloat4x4(&mSca) * XMLoadFloat4x4(&mRot) * XMLoadFloat4x4(&mPos);
+    XMStoreFloat4x4(&matrix, worldMat);
+}
