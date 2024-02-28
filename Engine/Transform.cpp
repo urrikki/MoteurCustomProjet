@@ -8,7 +8,27 @@ void TRANSFORM::Identity()
     vSca.y = 1.0f;
     vSca.z = 1.0f;
 
-    XMStoreFloat4x4(&mSca, XMMatrixIdentity());
+    mSca._11 = 1.0f;
+    mSca._12 = 0.0f;
+    mSca._13 = 0.0f;
+    mSca._14 = 0.0f;
+
+    mSca._21 = 0.0f;
+    mSca._22 = 1.0f;
+    mSca._23 = 0.0f;
+    mSca._24 = 0.0f;
+
+    mSca._31 = 0.0f;
+    mSca._32 = 0.0f;
+    mSca._33 = 1.0f;
+    mSca._34 = 0.0f;
+
+    mSca._41 = 0.0f;
+    mSca._42 = 0.0f;
+    mSca._43 = 0.0f;
+    mSca._44 = 1.0f;
+
+    //XMStoreFloat4x4(&mSca, XMMatrixIdentity());
 
     vDir.x = 0.0f;
     vDir.y = 0.0f;
@@ -40,9 +60,7 @@ void TRANSFORM::Identity()
 }
 
 void TRANSFORM::Rotate(float roll, float pitch, float yaw)
-{
-    //Utiliser qRot dans la fonction 
-    
+{   
     // Créer un quaternion pour chaque rotation (delta)
     XMVECTOR quatRot;
 
@@ -61,13 +79,21 @@ void TRANSFORM::Rotate(float roll, float pitch, float yaw)
     // Ajouter la rotation delta à la rotation actuelle de l'objet
     XMStoreFloat4(&qRot, XMQuaternionMultiply(XMLoadFloat4(&qRot), quatRot));
 
-    //Utiliser mRot dans la fonction
-    // Convertir le quaternion en une matrice de rotation
-    XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4(&qRot));
+    // Convertir le quaternion en une matrice de rotation (magique)
+    XMMATRIX matRot = XMMatrixRotationQuaternion(XMLoadFloat4 (&qRot));
+
+    //Passer la matrix en XMFLOAT4X4
+    XMStoreFloat4x4(&mRot, matRot);
 
     // Mettre à jour les axes de notre objet (3 vecteurs)
-    XMStoreFloat3(&vRight, matRot.r[0]);
-    XMStoreFloat3(&vUp, matRot.r[1]);
-    XMStoreFloat3(&vDir, matRot.r[2]);
+    vRight.x = mRot._11;
+    vRight.y = mRot._12;
+    vRight.z = mRot._13;
+    vUp.x = mRot._21;
+    vUp.y = mRot._22;
+    vUp.z = mRot._23;
+    vDir.x = mRot._31;
+    vDir.y = mRot._32;
+    vDir.z = mRot._33;   
 }
 
