@@ -4,6 +4,7 @@
 #include <memory>
 #include "Component.h"
 #include "Texture.h"
+#include "Transform.h"
 
 class GameObject {
 private:
@@ -27,4 +28,11 @@ public:
 
     void setTexture(std::unique_ptr<Texture> texture);
     Texture* getTexture() const;
+
+    //Transform& getTransform();
+    void addComponent(std::unique_ptr<Component> component);
+    Component* getComponent(ComponentType type) const;
+    void update(float deltaTime);
+    void render();
+    //void handleEvent(const Event& event);
 };
