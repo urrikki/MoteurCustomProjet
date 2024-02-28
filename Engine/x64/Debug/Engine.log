@@ -1,0 +1,2 @@
+﻿  Engine.cpp
+C:\Users\epulzatto\source\repos\MoteurCustomProjet\Engine\Engine.cpp(6,21): error C3867: 'GameTimer::Start' : syntaxe non-standard ; utilisez '&' pour créer un pointeur vers un membre
