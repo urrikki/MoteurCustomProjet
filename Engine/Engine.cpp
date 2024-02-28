@@ -3,7 +3,7 @@
 
 int main()
 {
-    GameTimer::Start;
+    
     std::cout << "Hello World!\n";
 
 }

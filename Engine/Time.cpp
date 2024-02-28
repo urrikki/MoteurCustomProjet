@@ -2,9 +2,6 @@
 ------Enzo pulzatto-------
 ------------------------*/
 
-//***************************************************************************************
-// GameTimer.cpp by Frank Luna (C) 2011 All Rights Reserved.
-//***************************************************************************************
 
 #include <windows.h>
 #include "Time.h"
@@ -22,29 +19,14 @@ GameTimer::GameTimer()
 // time when the clock is stopped.
 float GameTimer::TotalTime()const
 {
-	// If we are stopped, do not count the time that has passed since we stopped.
-	// Moreover, if we previously already had a pause, the distance 
-	// mStopTime - mBaseTime includes paused time, which we do not want to count.
-	// To correct this, we can subtract the paused time from mStopTime:  
-	//
-	//                     |<--paused time-->|
-	// ----*---------------*-----------------*------------*------------*------> time
-	//  mBaseTime       mStopTime        startTime     mStopTime    mCurrTime
+	
 
 	if (mStopped)
 	{
 		return (float)(((mStopTime - mPausedTime) - mBaseTime) * mSecondsPerCount);
 	}
 
-	// The distance mCurrTime - mBaseTime includes paused time,
-	// which we do not want to count.  To correct this, we can subtract 
-	// the paused time from mCurrTime:  
-	//
-	//  (mCurrTime - mPausedTime) - mBaseTime 
-	//
-	//                     |<--paused time-->|
-	// ----*---------------*-----------------*------------*------> time
-	//  mBaseTime       mStopTime        startTime     mCurrTime
+	
 
 	else
 	{
@@ -74,11 +56,6 @@ void GameTimer::Start()
 	QueryPerformanceCounter((LARGE_INTEGER*)&startTime);
 
 
-	// Accumulate the time elapsed between stop and start pairs.
-	//
-	//                     |<-------d------->|
-	// ----*---------------*-----------------*------------> time
-	//  mBaseTime       mStopTime        startTime     
 
 	if (mStopped)
 	{
